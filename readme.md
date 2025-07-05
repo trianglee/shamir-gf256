@@ -3,6 +3,10 @@
 A single page tool for splitting secrets into parts or recreating secrets from
 existing parts.
 
+This scheme is 100% compatible with pygfssss (https://github.com/trianglee/pygfssss).
+
+Very heavily based on Ian Coleman's original implementation (https://iancoleman.io/shamir/).
+
 # Usage
 
 ## Splitting
@@ -33,4 +37,4 @@ Pull requests are welcome.
 
 # License
 
-MIT, see [license](https://github.com/iancoleman/shamir/blob/master/license).
+MIT, see [license](https://github.com/trianglee/shamir-gf256/blob/master/license).

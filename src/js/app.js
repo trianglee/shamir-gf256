@@ -20,12 +20,24 @@
         DOM.parts.addEventListener("input", combineParts);
     }
 
+    // Convert a UTF16 string to UTF8 bytes.
+    function UTF16StringToUTF8Bytes(UTF16Str) {
+        const encoder = new TextEncoder();
+        return encoder.encode(UTF16Str);
+    }
+
+    // Convert UTF8 bytes to a UTF16 string.
+    function UTF8BytesToUTF16String(UTF8Bytes) {
+        const decoder = new TextDecoder('utf-8');
+        return decoder.decode(UTF8Bytes);
+    }
+
     function generateParts() {
         // Clear old generated
         DOM.generated.innerHTML = "";
         // Get the input values
         var secret = DOM.secret.value;
-        var secretHex = secrets.str2hex(secret);
+        var secretBytes = UTF16StringToUTF8Bytes(secret);
         var total = parseFloat(DOM.total.value);
         var required = parseFloat(DOM.required.value);
         // validate the input
@@ -65,8 +77,7 @@
             DOM.error.textContent = "";
         }
         // Generate the parts to share
-        var minPad = 1024; // see https://github.com/amper5and/secrets.js#note-on-security
-        var shares = secrets.share(secretHex, total, required, minPad);
+        var shares = secrets.share(secretBytes, total, required);
         // Display the parts
         for (var i=0; i<shares.length; i++) {
             var share = shares[i];
@@ -89,8 +100,8 @@
         var parts = partsStr.trim().split(/\s+/);
         // Combine the parts
         try {
-            var combinedHex = secrets.combine(parts);
-            var combined = secrets.hex2str(combinedHex);
+            var secretBytes = secrets.combine(parts);
+            var combined = UTF8BytesToUTF16String(secretBytes);
         }
         catch (e) {
             DOM.combined.textContent = e.message;
